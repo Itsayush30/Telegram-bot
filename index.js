@@ -1,6 +1,7 @@
-const { Telegraf } = require("telegraf");
-require("dotenv").config();
-
+const { Telegraf } = require('telegraf');
+const axios = require('axios');
+require('dotenv').config();
+console.log(process.env)
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const binarySearchString = `
@@ -19,10 +20,37 @@ const binarySearch = function search(arr, x) {
 }
 `;
 
-bot.start((ctx) => ctx.reply("Welcome to Ayush\'s Algo bot")); // /start
+try {
+    bot.start((ctx) => ctx.reply('Welcome to Sanket\'s Algo bot')); // /start
 
-bot.command("binarysearch", (ctx) => ctx.reply(binarySearchString)); // /binarysearch
+    bot.command('binarysearch', (ctx) => ctx.reply(binarySearchString)); // /binarysearch
+    
+    bot.command('toplinuxcommands', (ctx) => ctx.reply('ls cd pwd grep rm'))
 
-bot.command("toplinuxcommands", (ctx) => ctx.reply("ls cd pwd grep rm"));
+    bot.on('sticker', (ctx) => ctx.reply('❤️'));
 
-bot.on("sticker", (ctx) => ctx.reply("❤️"));
+    bot.command('binarytreejs', async (ctx) => {
+        const response = await axios.get('xyz');
+        ctx.reply(response.data);
+    })
+
+    // bot.command('quit', async (ctx) => {
+    //     // Explicit usage
+    //     await ctx.telegram.leaveChat(ctx.message.chat.id);
+      
+    //     // Using context shortcut
+    //     await ctx.leaveChat();
+    // });
+
+    bot.on('text', (ctx) => {
+        console.log(ctx.update.message);
+        if(ctx.update.message.text == 'I love you') {
+            ctx.reply('love you too broo');
+        } else {
+            ctx.reply('i don\'t understand humans')
+        }
+    });
+    bot.launch();
+} catch {
+    console.log("unexpected command");
+}
